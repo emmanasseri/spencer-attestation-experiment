@@ -3,16 +3,16 @@ import RootLayout from "./layout";
 import Chakra from "./chakra";
 //import Navbar from "@/components/Navbar";
 //import Footer from "@/components/Footer";
-//import Homepage from "@/components/homepage/Homepage";
+import Place from "@/components/Place";
 
 function Home() {
   return (
     <RootLayout>
       <Chakra>
         {/* <Navbar /> */}
-        {/* <Homepage /> */}
+
         {/* <Footer /> */}
-        homepage
+        <Place />
       </Chakra>
     </RootLayout>
   );
