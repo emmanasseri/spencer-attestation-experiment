@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Text, VStack, useToast } from "@chakra-ui/react";
 import { ethers } from "ethers";
-import { createAttestation } from "../EAS/easService";
+import { createAttestation, initializeEAS } from "../EAS/easService";
 
-const targetNetworkId = "80002";
+const targetNetworkId = "11155111"; // Sepolia network chain ID
 
 const AttestationForm = () => {
   const [userAddress, setUserAddress] = useState("");
@@ -25,6 +25,7 @@ const AttestationForm = () => {
           setIsCorrectNetwork(true);
           const [account] = await provider.send("eth_requestAccounts", []);
           setUserAddress(account);
+          await initializeEAS();
         } else {
           setIsCorrectNetwork(false);
         }
@@ -49,14 +50,14 @@ const AttestationForm = () => {
           params: [
             {
               chainId: "0x" + parseInt(targetNetworkId).toString(16),
-              chainName: "Polygon Amoy Testnet",
+              chainName: "Sepolia Testnet",
               nativeCurrency: {
-                name: "MATIC",
-                symbol: "MATIC",
+                name: "SepoliaETH",
+                symbol: "ETH",
                 decimals: 18,
               },
-              rpcUrls: ["https://rpc-amoy.polygon.technology/"],
-              blockExplorerUrls: ["https://www.oklink.com/amoy"],
+              rpcUrls: ["https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID"],
+              blockExplorerUrls: ["https://sepolia.etherscan.io"],
             },
           ],
         });
@@ -72,7 +73,7 @@ const AttestationForm = () => {
     if (!isCorrectNetwork) {
       toast({
         title: "Wrong network",
-        description: "Please switch to the Polygon Amoy Testnet.",
+        description: "Please switch to the Sepolia Testnet.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -81,10 +82,10 @@ const AttestationForm = () => {
     }
 
     try {
-      const tx = await createAttestation(userAddress, locationName);
+      const receipt = await createAttestation(userAddress, locationName);
       toast({
         title: "Attestation created.",
-        description: `Transaction hash: ${tx.hash}`,
+        description: `Transaction hash: ${receipt.transactionHash}`,
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -106,8 +107,8 @@ const AttestationForm = () => {
       <Text fontSize={"xl"} mb={4} color="black">
         This form allows you to attest that the collectively owned wallet owns
         the location "Sandy Ground". To do so, please ensure you are connected
-        to the Polygon Amoy Testnet. If not, you can switch networks using the
-        button below.
+        to the Sepolia Testnet. If not, you can switch networks using the button
+        below.
       </Text>
       <VStack mt={4}>
         <Button colorScheme="teal" onClick={handleAttest} mb={4}>
