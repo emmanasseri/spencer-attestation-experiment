@@ -8,7 +8,7 @@ const theme = extendTheme({
   styles: {
     global: {
       body: {
-        bg: "linear-gradient(to top, #013220 30%, #00008B 70%)",
+        bg: "linear-gradient(to top, #FFFFFF 30%, #87ceeb 70%)",
         color: "white",
         fontFamily: "'Courier New', monospace",
       },

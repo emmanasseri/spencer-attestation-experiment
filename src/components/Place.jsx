@@ -7,7 +7,7 @@ const Place = () => {
       p={5}
       width="75%"
       mx="auto"
-      bg="rgba(0, 0, 0, 0.4)"
+      bg="rgba(0, 0, 0, 0.5)"
       borderRadius="md"
       textAlign="center"
       mt="15px"

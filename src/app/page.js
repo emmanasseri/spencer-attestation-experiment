@@ -4,7 +4,8 @@ import Chakra from "./chakra";
 //import Navbar from "@/components/Navbar";
 //import Footer from "@/components/Footer";
 import Place from "@/components/Place";
-import AttestationsLog from "@/components/AttestaionsLog";
+import AttestationsLog from "@/components/AttestationsLog";
+import AttestationForm from "@/components/AttestationForm";
 import People from "@/components/People";
 
 function Home() {
@@ -16,6 +17,7 @@ function Home() {
         {/* <Footer /> */}
         <Place />
         <AttestationsLog />
+        <AttestationForm />
         <People />
       </Chakra>
     </RootLayout>

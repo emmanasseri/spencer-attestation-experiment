@@ -19,7 +19,7 @@ const People = () => {
             aria-label={`Wallet address ${index + 1}`}
           >
             <Box>
-              <Icon as={FaUser} boxSize={10} color="darkgreen" />
+              <Icon as={FaUser} boxSize={10} color="teal.500" />
             </Box>
           </Tooltip>
         ))}
