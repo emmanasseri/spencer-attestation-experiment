@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.11.5",
     "@ethereum-attestation-service/eas-contracts": "^1.4.1",
     "@ethereum-attestation-service/eas-sdk": "^2.1.4",
+    "ethers": "^6.12.1",
     "framer-motion": "^11.2.4",
     "next": "14.2.3",
     "react": "^18",
