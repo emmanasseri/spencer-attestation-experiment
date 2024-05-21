@@ -1,53 +1,65 @@
-import { ethers } from "ethers";
-import { SchemaRegistry } from "@ethereum-attestation-service/eas-sdk";
+require("dotenv").config({ path: "../../.env.local" });
+const { ethers } = require("ethers");
+const { SchemaRegistry } = require("@ethereum-attestation-service/eas-sdk");
 
-// Initialize the Ethereum provider (MetaMask)
-const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-// Create a SchemaRegistry instance
-const schemaRegistry = new SchemaRegistry(provider);
-
-async function deploySchema() {
-  // Get the signer from the provider
-  const signer = provider.getSigner();
-
-  // Define the schema
-  const schema = {
-    properties: [
-      { name: "walletAddress", type: "address" },
-      { name: "locationName", type: "string" },
-      { name: "timestamp", type: "uint256" },
-    ],
-  };
-
-  // Deploy the schema
+const deploySchema = async () => {
   try {
-    const tx = await schemaRegistry.createSchema(schema, {
-      from: await signer.getAddress(),
-    });
-    const receipt = await tx.wait();
+    const provider = new ethers.JsonRpcProvider(
+      process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL
+    );
 
-    console.log("Schema deployed successfully");
-    console.log("Schema ID:", receipt.events[0].args.schemaId);
+    const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+    const wallet = new ethers.Wallet(privateKey, provider);
+
+    const schemaRegistryContractAddress =
+      "0x0a7E2Ff54e76B8E6659aedc9103FB21c038050D0";
+    const schemaRegistry = new SchemaRegistry(schemaRegistryContractAddress);
+
+    schemaRegistry.connect(wallet);
+
+    const schema =
+      "address walletAddress,string locationName,uint256 timestamp,uint256 uniqueId";
+    const resolverAddress = "0x0000000000000000000000000000000000000000";
+    const revocable = true;
+
+    console.log("Schema:", schema);
+    console.log("Resolver Address:", resolverAddress);
+    console.log("Revocable:", revocable);
+
+    const transaction = await schemaRegistry.register({
+      schema,
+      resolverAddress,
+      revocable,
+      gasLimit: 500000, // Manually set a high gas limit
+    });
+
+    const receipt = await transaction.wait();
+
+    console.log("Transaction receipt:", receipt);
+
+    // Log the entire receipt for debugging
+    console.log("Full Transaction Receipt:", JSON.stringify(receipt, null, 2));
+
+    // Access the schema ID from the receipt
+    const schemaId = receipt.events[0]?.args?.schemaId;
+    if (schemaId) {
+      console.log("Schema deployed successfully");
+      console.log("Schema ID:", schemaId);
+    } else {
+      throw new Error("Schema ID not found in the transaction receipt");
+    }
   } catch (error) {
     console.error("Error deploying schema:", error);
+    if (error.transaction) {
+      console.error(
+        "Transaction data:",
+        JSON.stringify(error.transaction, null, 2)
+      );
+    }
+    if (error.reason) {
+      console.error("Error reason:", error.reason);
+    }
   }
-}
+};
 
-// Request account access if needed
-async function requestAccountAccess() {
-  if (!window.ethereum) {
-    console.error("MetaMask is not installed");
-    return;
-  }
-
-  try {
-    await window.ethereum.request({ method: "eth_requestAccounts" });
-    deploySchema();
-  } catch (error) {
-    console.error("Error requesting account access:", error);
-  }
-}
-
-// Start the process
-requestAccountAccess();
+deploySchema();
