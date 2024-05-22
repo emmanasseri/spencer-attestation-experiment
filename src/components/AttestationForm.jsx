@@ -106,9 +106,9 @@ const AttestationForm = () => {
     <Box p={5} width="75%" mx="auto" textAlign="center" mt="15px" mb="15px">
       <Text fontSize={"xl"} mb={4} color="black">
         This form allows you to attest that the collectively owned wallet owns
-        the location "Sandy Ground". To do so, please ensure you are connected
-        to the Sepolia Testnet. If not, you can switch networks using the button
-        below.
+        the location &quot;Sandy Ground&quot;. To do so, please ensure you are
+        connected to the Sepolia Testnet. If not, you can switch networks using
+        the button below.
       </Text>
       <VStack mt={4}>
         <Button colorScheme="teal" onClick={handleAttest} mb={4}>
