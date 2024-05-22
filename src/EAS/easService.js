@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import axios from "axios";
 
 let eas;
 
@@ -60,6 +61,40 @@ export const createAttestation = async (walletAddress, locationName) => {
     return receipt;
   } catch (error) {
     console.error("Error creating attestation:", error);
+    throw error;
+  }
+};
+
+export const fetchRecentAttestations = async () => {
+  const query = `
+    query Attestations {
+      attestations(
+        take: 3, 
+        orderBy: { time: desc }, 
+        where: { schemaId: { equals: "${process.env.NEXT_PUBLIC_SCHEMA_ID}" } }
+      ) {
+        id
+        attester
+        recipient
+        refUID
+        revocable
+        revocationTime
+        expirationTime
+        data
+      }
+    }
+  `;
+
+  try {
+    const response = await axios.post(
+      process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
+      {
+        query,
+      }
+    );
+    return response.data.data.attestations;
+  } catch (error) {
+    console.error("Error fetching attestations:", error);
     throw error;
   }
 };

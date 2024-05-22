@@ -85,7 +85,7 @@ const AttestationForm = () => {
       const receipt = await createAttestation(userAddress, locationName);
       toast({
         title: "Attestation created.",
-        description: `Transaction hash: ${receipt.transactionHash}`,
+        description: `Transaction ID: ${receipt}`,
         status: "success",
         duration: 5000,
         isClosable: true,
