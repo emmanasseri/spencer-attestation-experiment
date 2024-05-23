@@ -4,7 +4,7 @@ const RootLayout = ({ children }) => {
   return (
     <html lang="en">
       <head>
-        <title>Emma Nasseri</title>
+        <title>Attestation Experiment</title>
         <meta name="description" content="Spencer Attestation Experiment" />
         {/* Include any global styles here */}
       </head>
